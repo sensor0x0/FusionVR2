@@ -19,31 +19,24 @@ namespace Fusion.VR.Player
 
         public static bool operator ==(FusionVRNetworkedPlayerData lhs, FusionVRNetworkedPlayerData rhs)
         {
-            if (lhs.headPosition != rhs.headPosition)
-                return false;
-
-            if (lhs.headRotation != rhs.headRotation)
-                return false;
-
-            if (lhs.leftHandPosition != rhs.leftHandPosition)
-                return false;
-
-            if (lhs.leftHandRotation != rhs.leftHandRotation)
-                return false;
-
-            if (lhs.rightHandPosition != rhs.rightHandPosition)
-                return false;
-
-            if (lhs.rightHandRotation != rhs.rightHandRotation)
-                return false;
-
-
-            return true;
+            return lhs.headPosition == rhs.headPosition &&
+                   lhs.headRotation == rhs.headRotation &&
+                   lhs.leftHandPosition == rhs.leftHandPosition &&
+                   lhs.leftHandRotation == rhs.leftHandRotation &&
+                   lhs.rightHandPosition == rhs.rightHandPosition &&
+                   lhs.rightHandRotation == rhs.rightHandRotation;
         }
 
         public static bool operator !=(FusionVRNetworkedPlayerData lhs, FusionVRNetworkedPlayerData rhs)
         {
             return !(lhs == rhs);
+        }
+
+        public override bool Equals(object obj) => obj is FusionVRNetworkedPlayerData data && this == data;
+        
+        public override int GetHashCode()
+        {
+            return headPosition.GetHashCode() ^ headRotation.GetHashCode();
         }
     }
 }

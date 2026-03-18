@@ -81,24 +81,23 @@ namespace Fusion.VR.Networking
             data.rightHandPosition = FusionVRManager.Manager.RightHand.position;
             data.rightHandRotation = FusionVRManager.Manager.RightHand.rotation;
 
-            //Debug.Log(data.ToString());
-
             if (data != lastData)
             {
-                //Debug.Log("Sending data");
                 input.Set(data);
                 lastData = data;
             }
         }
 
         public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
+        
         public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
         {
             Debug.Log($"Runner shutdown: {shutdownReason}");
             Destroy(gameObject);
         }
+        
         public void OnConnectedToServer(NetworkRunner runner) { }
-        public void OnDisconnectedFromServer(NetworkRunner runner) { }
+        public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason) { }
         public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
         public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason) { }
         public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message) { }
@@ -124,26 +123,14 @@ namespace Fusion.VR.Networking
 
             Debug.LogWarning("Host migration is not yet implemented fully");
 
-            /*
-            foreach (NetworkObject r in runner.GetResumeSnapshotNetworkObjects())
-            {
-                if (r.GetComponent<FusionVRPlayer>() != null)
-                {
-                    FusionVRPlayer player = r.GetComponent<FusionVRPlayer>();
-                    runner.Spawn(r, onBeforeSpawned: (runner, newPlayer) =>
-                    {
-                        Debug.Log("Migrated player");
-                        newPlayer.CopyStateFrom(r);
-                    });
-                }
-            }
-            */
-
             if (FusionVRManager.OnHostMigrationResume != null)
                 FusionVRManager.OnHostMigrationResume.Invoke(runner);
         }
 
-        public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data) { }
+        public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ReliableKey key, ArraySegment<byte> data) { }
+        public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress) { }
+        public void OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
+        public void OnObjectEnterAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
         public void OnSceneLoadDone(NetworkRunner runner) { }
         public void OnSceneLoadStart(NetworkRunner runner) { }
     }

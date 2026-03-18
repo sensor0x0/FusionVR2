@@ -40,11 +40,9 @@ namespace Fusion.VR.Editor
                 if (manager.Runner.IsConnectedToServer)
                 {
                     GUILayout.Label($"State: {manager.Runner.State}");
-                    //GUILayout.Label($"Ping: {manager.Runner.State}");
-                    //GUILayout.Label($"Room: {(PhotonNetwork.InRoom ? PhotonNetwork.CurrentRoom.Name : "Not in a room")}");
                     if (!manager.JoinRoomOnConnect)
                         if (GUILayout.Button(CreateContent("Join", "Join a random public lobby")))
-                            FusionVRManager.JoinRandomRoom("Default", 16);
+                            _ = FusionVRManager.JoinRandomRoom("Default", 16);
                 }
                 else if (!manager.ConnectOnAwake)
                     if (GUILayout.Button("Connect"))
@@ -54,7 +52,7 @@ namespace Fusion.VR.Editor
 
         private bool CheckForRig(FusionVRManager manager)
         {
-            GameObject[] objects = FindObjectsOfType<GameObject>();
+            GameObject[] objects = FindObjectsByType<GameObject>(FindObjectsSortMode.None);
 
             bool b = false;
 

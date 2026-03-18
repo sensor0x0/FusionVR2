@@ -40,16 +40,18 @@ namespace Fusion.VR.Player
         public bool HideLocalPlayer = false;
 
         [Header("Networked Variables")]
-        public bool isLocalPlayer;  // Not exactly networked, but you can't make a stupid header without a regular stupid variable
-        [Networked(OnChanged = nameof(OnNickNameChanged))]
-        public NetworkString<_32> NickName { get; set; } // I feel as if nobody is going to have their name over 32 characters, feel free to change it though
-        [Networked(OnChanged = nameof(OnColourChanged))]
-        public Color Colour { get; set; }
-        [Networked(OnChanged = nameof(OnCosmeticsChanged)), Capacity(10)] // Default is max 10, because beyond that the game would probably start lagging
-        public NetworkDictionary<NetworkString<_16>, NetworkString<_32>> Cosmetics => default;
+        public bool isLocalPlayer;  
+
+        [Networked] public NetworkString<_32> NickName { get; set; } 
+        [Networked] public Color Colour { get; set; }
+        [Networked, Capacity(10)] public NetworkDictionary<NetworkString<_16>, NetworkString<_32>> Cosmetics { get; }
+
+        private ChangeDetector _changeDetector;
 
         public override void Spawned()
         {
+            _changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
+
             if (Object.HasInputAuthority)
             {
                 localPlayer = this;
@@ -65,19 +67,58 @@ namespace Fusion.VR.Player
             }
         }
 
+        public override void Render()
+        {
+            foreach (var change in _changeDetector.DetectChanges(this))
+            {
+                switch (change)
+                {
+                    case nameof(NickName):
+                        NameText.text = NickName.Value;
+                        gameObject.name = $"Player ({NickName.Value})";
+                        break;
+                    case nameof(Colour):
+                        foreach (Renderer renderer in renderers)
+                        {
+                            renderer.material.color = Colour;
+                        }
+                        break;
+                    case nameof(Cosmetics):
+                        foreach (KeyValuePair<NetworkString<_16>, NetworkString<_32>> cosmetic in Cosmetics)
+                        {
+                            foreach (PlayerCosmeticSlot slot in cosmeticSlots)
+                            {
+                                if (cosmetic.Key == slot.SlotName)
+                                {
+                                    foreach (Transform t in slot.Slot)
+                                    {
+                                        GameObject obj = t.gameObject;
+                                        obj.SetActive(obj.name == cosmetic.Value);
+
+                                        if (t.GetComponentInChildren<Collider>() != null)
+                                        {
+                                            Debug.LogWarning($"It is not recommended to have a collider on a cosmetic ({obj.name})");
+                                        }
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                        break;
+                }
+            }
+        }
+
         private void Update()
         {
-            // Check if this is the local player
             if (Object.HasInputAuthority)
             {
-                // Move the objects locally
-                // Head
                 HeadTransform.transform.position = FusionVRManager.Manager.Head.position;
                 HeadTransform.transform.rotation = FusionVRManager.Manager.Head.rotation;
-                // Left hand
+                
                 LeftHandTransform.transform.position = FusionVRManager.Manager.LeftHand.position;
                 LeftHandTransform.transform.rotation = FusionVRManager.Manager.LeftHand.rotation;
-                // Right hand
+                
                 RightHandTransform.transform.position = FusionVRManager.Manager.RightHand.position;
                 RightHandTransform.transform.rotation = FusionVRManager.Manager.RightHand.rotation;
             }
@@ -89,53 +130,9 @@ namespace Fusion.VR.Player
             {
                 if (GetInput(out FusionVRNetworkedPlayerData data))
                 {
-                    HeadTransform.TeleportToPositionRotation(data.headPosition, data.headRotation);
-                    LeftHandTransform.TeleportToPositionRotation(data.leftHandPosition, data.leftHandRotation);
-                    RightHandTransform.TeleportToPositionRotation(data.rightHandPosition, data.rightHandRotation);
-
-                    //Debug.Log(data.ToString());
-                }
-            }
-        }
-
-        public static void OnNickNameChanged(Changed<FusionVRPlayer> changed)
-        {
-            changed.Behaviour.NameText.text = changed.Behaviour.NickName.Value;
-            changed.Behaviour.gameObject.name = $"Player ({changed.Behaviour.NickName.Value})";
-        }
-
-        public static void OnColourChanged(Changed<FusionVRPlayer> changed)
-        {
-            List<Renderer> renderers = changed.Behaviour.renderers;
-            foreach (Renderer renderer in renderers)
-            {
-                renderer.material.color = changed.Behaviour.Colour;
-            }
-        }
-
-        public static void OnCosmeticsChanged(Changed<FusionVRPlayer> changed)
-        {
-            List<PlayerCosmeticSlot> slots = changed.Behaviour.cosmeticSlots;
-
-            // Foreach, foreach, foreach, foreach!! We love foreach!!
-            foreach (KeyValuePair<NetworkString<_16>, NetworkString<_32>> cosmetic in changed.Behaviour.Cosmetics)
-            {
-                foreach (PlayerCosmeticSlot slot in slots)
-                {
-                    if (cosmetic.Key == slot.SlotName)
-                    {
-                        foreach (Transform t in slot.Slot)
-                        {
-                            GameObject obj = t.gameObject;
-                            obj.SetActive(obj.name == cosmetic.Value);
-
-                            if (t.GetComponentInChildren<Collider>() != null)
-                            {
-                                Debug.LogWarning($"It is not recommended to have a collider on a cosmetic ({obj.name})");
-                            }
-                        }
-                        break;
-                    }
+                    HeadTransform.Teleport(data.headPosition, data.headRotation);
+                    LeftHandTransform.Teleport(data.leftHandPosition, data.leftHandRotation);
+                    RightHandTransform.Teleport(data.rightHandPosition, data.rightHandRotation);
                 }
             }
         }
@@ -162,6 +159,7 @@ namespace Fusion.VR.Player
                 {
                     Cosmetics.Set(cos.SlotName, cos.CosmeticName);
                 }
+                i++;
             }
         }
     }
