@@ -24,9 +24,9 @@ It has been updated to support Photon Fusion 2 and Unity 6.3 LTS.
 
 # Using FusionVR2 in code (Documentation)
 
-### Add FusionVR2Manager
-- Navigate to Resources/FusionVR2/Prefabs
-- Drag **FusionVR2Manager** into your scene
+### Add FusionVRManager
+- Navigate to Resources/FusionVR/Prefabs
+- Drag **FusionVRManager** into your scene
 - The manager will attempt to fill most fields, but you may have to fill some out yourself.
 
 ## Connecting and Joining Rooms
@@ -35,7 +35,7 @@ It has been updated to support Photon Fusion 2 and Unity 6.3 LTS.
 - Connects to the Photon Fusion server.
 - Doesn't take any parameters.
 ```cs
-FusionVR2Manager.Connect();
+FusionVRManager.Connect();
 ```
 
 #### `JoinRandomRoom(string queue, int maxPlayers = 100)`
@@ -43,21 +43,21 @@ FusionVR2Manager.Connect();
 ```cs
 string queue = "DefaultQueue";
 int maxPlayers = 10;
-FusionVR2Manager.JoinRandomRoom(queue, maxPlayers);
+FusionVRManager.JoinRandomRoom(queue, maxPlayers);
 ```
 
 #### `JoinPrivateRoom(string roomCode, int maxPlayers = 100)`
 - Joins a specific private room using a room code.
 ```cs
 string roomCode = "1234";
-FusionVR2Manager.JoinPrivateRoom(roomCode, 10);
+FusionVRManager.JoinPrivateRoom(roomCode, 10);
 ```
 
 #### `LeaveRoom()`
 - Leaves the current room.
 - Doesn't take any parameters.
 ```cs
-FusionVR2Manager.LeaveRoom();
+FusionVRManager.LeaveRoom();
 ```
 
 ## Player Customisation
@@ -65,14 +65,14 @@ FusionVR2Manager.LeaveRoom();
 #### `SetUsername(string userName)`
 - Sets the player's username.
 ```cs
-FusionVR2Manager.SetUsername("sensor0x0");
+FusionVRManager.SetUsername("sensor0x0");
 ```
 
 #### `SetColour(Color color)`
 - Sets the player's colour
 - `color` is a Unity RGBA colour (0-1).
 ```cs
-FusionVR2Manager.SetColour(new Color(0f, 0f, 1f)); // blue colour
+FusionVRManager.SetColour(new Color(0f, 0f, 1f)); // blue colour
 ```
 
 ### Cosmetics
@@ -82,7 +82,7 @@ FusionVR2Manager.SetColour(new Color(0f, 0f, 1f)); // blue colour
 #### `SetCosmetics(string slotName, string cosmeticName)`
 - Single cosmetic:
 ```cs
-FusionVR2Manager.SetCosmetics("Head", "VRTopHat");
+FusionVRManager.SetCosmetics("Head", "VRTopHat");
 ```
 - Enable multiple cosmetics:
 ```cs
@@ -91,7 +91,7 @@ var cosmetics = new Dictionary<string, string> {
     { "Face", "VRSunglasses" }
 };
 
-FusionVR2Manager.SetCosmetics(cosmetics);
+FusionVRManager.SetCosmetics(cosmetics);
 ```
 
 > Note: Some functions are async and may show warnings, this is normal. You can `await` them if needed.
