@@ -9,7 +9,7 @@ It has been updated to support Photon Fusion 2 and Unity 6.3 LTS.
 ## Requirements
 - [Photon Fusion 2 SDK](https://assetstore.unity.com/packages/tools/network/photon-fusion-267958)
 - [Photon Voice 2 SDK](https://assetstore.unity.com/packages/tools/audio/photon-voice-2-130518)
-> Note (Photon Voice 2 SDK): Version 2.50 contains breaking changes. Please see the release info or Assets/Photon/PhotonVoice/changes-voice.txt for migration guide.
+> Note (Photon Voice 2 SDK) if upgrading: Version 2.50 contains breaking changes. Please see the release info or Assets/Photon/PhotonVoice/changes-voice.txt for migration guide.
 
 ---
 
