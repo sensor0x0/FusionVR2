@@ -1,194 +1,97 @@
-!\[FusionVRLogoNoBackSmall](https://github.com/fchb1239/FusionVR/assets/29258204/48221303-cec0-47b9-bc0e-d129bba3dbcc)
+![FusionVRLogoNoBackSmall](https://github.com/fchb1239/FusionVR/assets/29258204/48221303-cec0-47b9-bc0e-d129bba3dbcc)
+# FusionVR2
 
-\# FusionVR2
+## This is a dummy readme while I update the code, project is likely currently non-functional!
 
-
-
-\## This is a dummy readme while I update the code, project is likely currently non-functional!
-
-
-
-This project is based on \[FusionVR](https://github.com/fchb1239/FusionVR) by fchb1239.  
-
+This project is based on [FusionVR](https://github.com/fchb1239/FusionVR) by fchb1239.  
 It has been updated to support Photon Fusion 2 and Unity 6.3 LTS.
 
+---
 
-
-\---
-
-
-
-\## Requirements
-
-\- \[Photon Fusion 2 SDK](https://assetstore.unity.com/packages/tools/network/photon-fusion-267958)
-
-\- \[Photon Voice 2 SDK](https://assetstore.unity.com/packages/tools/audio/photon-voice-2-130518)
-
+## Requirements
+- [Photon Fusion 2 SDK](https://assetstore.unity.com/packages/tools/network/photon-fusion-267958)
+- [Photon Voice 2 SDK](https://assetstore.unity.com/packages/tools/audio/photon-voice-2-130518)
 > Note (Photon Voice 2 SDK): Version 2.50 contains breaking changes. Please see the release info or Assets/Photon/PhotonVoice/changes-voice.txt for migration guide.
 
+---
 
+## Setup
+1. Import the FusionVR2 Unity package into your project.
+2. Make sure your project has the requirements installed.
+3. Import TMP Essential if prompted.
 
-\---
+---
 
+# Using FusionVR2 in code (Documentation)
 
+### Add FusionVR2Manager
+- Navigate to Resources/FusionVR2/Prefabs
+- Drag **FusionVR2Manager** into your scene
+- The manager will attempt to fill most fields, but you may have to fill some out yourself.
 
-\## Setup
+## Connecting and Joining Rooms
 
-1\. Import the FusionVR2 Unity package into your project.
-
-2\. Make sure your project has the requirements installed.
-
-3\. Import TMP Essential if prompted.
-
-
-
-\---
-
-
-
-\# Using FusionVR2 in code (Documentation)
-
-
-
-\### Add FusionVR2Manager
-
-\- Navigate to Resources/FusionVR2/Prefabs
-
-\- Drag \*\*FusionVR2Manager\*\* into your scene
-
-\- The manager will attempt to fill most fields, but you may have to fill some out yourself.
-
-
-
-\## Connecting and Joining Rooms
-
-
-
-\#### `Connect()`
-
-\- Connects to the Photon Fusion server.
-
-\- Doesn't take any parameters.
-
+#### `Connect()`
+- Connects to the Photon Fusion server.
+- Doesn't take any parameters.
 ```cs
-
 FusionVR2Manager.Connect();
-
 ```
 
-
-
-\#### `JoinRandomRoom(string queue, int maxPlayers = 100)`
-
-\- Joins a random room on the specified queue.
-
+#### `JoinRandomRoom(string queue, int maxPlayers = 100)`
+- Joins a random room on the specified queue.
 ```cs
-
 string queue = "DefaultQueue";
-
 int maxPlayers = 10;
-
 FusionVR2Manager.JoinRandomRoom(queue, maxPlayers);
-
 ```
 
-
-
-\#### `JoinPrivateRoom(string roomCode, int maxPlayers = 100)`
-
-\- Joins a specific private room using a room code.
-
+#### `JoinPrivateRoom(string roomCode, int maxPlayers = 100)`
+- Joins a specific private room using a room code.
 ```cs
-
 string roomCode = "1234";
-
 FusionVR2Manager.JoinPrivateRoom(roomCode, 10);
-
 ```
 
-
-
-\#### `LeaveRoom()`
-
-\- Leaves the current room.
-
-\- Doesn't take any parameters.
-
+#### `LeaveRoom()`
+- Leaves the current room.
+- Doesn't take any parameters.
 ```cs
-
 FusionVR2Manager.LeaveRoom();
-
 ```
 
+## Player Customisation
 
-
-\## Player Customisation
-
-
-
-\#### `SetUsername(string userName)`
-
-\- Sets the player's username.
-
+#### `SetUsername(string userName)`
+- Sets the player's username.
 ```cs
-
 FusionVR2Manager.SetUsername("sensor0x0");
-
 ```
 
-
-
-\#### `SetColour(Color color)`
-
-\- Sets the player's colour
-
-\- `color` is a Unity RGBA colour (0-1).
-
+#### `SetColour(Color color)`
+- Sets the player's colour
+- `color` is a Unity RGBA colour (0-1).
 ```cs
-
 FusionVR2Manager.SetColour(new Color(0f, 0f, 1f)); // blue colour
-
 ```
 
+### Cosmetics
+- Cosmetics are stored in a dictionary: `{ slotName : cosmeticName }`.
+- Add slots through the manager, then assign cosmetics under `Resources/FusionVR2/Player`.
 
-
-\### Cosmetics
-
-\- Cosmetics are stored in a dictionary: `{ slotName : cosmeticName }`.
-
-\- Add slots through the manager, then assign cosmetics under `Resources/FusionVR2/Player`.
-
-
-
-\#### `SetCosmetics(string slotName, string cosmeticName)`
-
-\- Single cosmetic:
-
+#### `SetCosmetics(string slotName, string cosmeticName)`
+- Single cosmetic:
 ```cs
-
 FusionVR2Manager.SetCosmetics("Head", "VRTopHat");
-
 ```
-
-\- Enable multiple cosmetics:
-
+- Enable multiple cosmetics:
 ```cs
-
 var cosmetics = new Dictionary<string, string> {
-
-&#x20;   { "Head", "VRTopHat" },
-
-&#x20;   { "Face", "VRSunglasses" }
-
+    { "Head", "VRTopHat" },
+    { "Face", "VRSunglasses" }
 };
 
-
-
 FusionVR2Manager.SetCosmetics(cosmetics);
-
 ```
 
-
-
 > Note: Some functions are async and may show warnings, this is normal. You can `await` them if needed.
-
