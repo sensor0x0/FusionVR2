@@ -1,8 +1,6 @@
 ![FusionVRLogoNoBackSmall](https://github.com/fchb1239/FusionVR/assets/29258204/48221303-cec0-47b9-bc0e-d129bba3dbcc)
 # FusionVR2
 
-## This is a dummy readme while I update the code, project is likely currently non-functional!
-
 This project is based on [FusionVR](https://github.com/fchb1239/FusionVR) by fchb1239.  
 It has been updated to support Photon Fusion 2 and Unity 6.3 LTS.
 
@@ -17,15 +15,16 @@ It has been updated to support Photon Fusion 2 and Unity 6.3 LTS.
 
 ## Setup
 1. Import the FusionVR2 Unity package into your project.
-2. Make sure your project has the requirements installed.
-3. Import TMP Essential if prompted.
+2. Make sure your project has the requirements installed (Photon Fusion 2 and Photon Voice 2).
+3. **Important**: On newer versions, Fusion-Voice integration should happen automatically. If not, visit the [Fusion Voice Documentation](https://doc.photonengine.com/voice/current/getting-started/voice-for-fusion).
+5. Import TMP Essentials if prompted.
 
 ---
 
 # Using FusionVR2 in code (Documentation)
 
 ### Add FusionVRManager
-- Navigate to Resources/FusionVR/Prefabs
+- Navigate to FusionVR2/Prefabs
 - Drag **FusionVRManager** into your scene
 - The manager will attempt to fill most fields, but you may have to fill some out yourself.
 
